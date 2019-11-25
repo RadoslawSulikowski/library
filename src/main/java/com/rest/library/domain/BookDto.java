@@ -16,7 +16,7 @@ public class BookDto {
     Long id;
     String title;
     LocalDate publicationYear;
-    AuthorDto author;
+    AuthorDto authorDto;
     List<VolumeDto> volumeDtoList;
 
 }

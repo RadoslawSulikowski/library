@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 public class VolumeDto {
     Long id;
-    BookDto book;
+    BookDto bookDto;
     String status;
     List<BorrowingDto> borrowingDtoList;
 }

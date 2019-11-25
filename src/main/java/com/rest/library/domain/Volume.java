@@ -13,22 +13,32 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
-@Entity
-@Table(name = "VOLUMES")
+@Entity(name = "Volume")
+@Table(name = "volume")
 public class Volume {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "BOOK_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
     Book book;
     String status;
 
     @OneToMany(
-            targetEntity = Borrowing.class,
             mappedBy = "volume",
-            cascade = CascadeType.PERSIST
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     List<Borrowing> borrowings = new ArrayList<>();
+
+    public void addBorrowing(Borrowing borrowing) {
+        borrowings.add(borrowing);
+        borrowing.setVolume(this);
+    }
+
+    public void removeBorrowing(Borrowing borrowing) {
+        borrowings.remove(borrowing);
+        borrowing.setVolume(null);
+    }
 }

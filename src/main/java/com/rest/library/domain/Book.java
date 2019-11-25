@@ -14,23 +14,33 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
-@Entity
-@Table(name = "BOOKS")
+@Entity(name = "Book")
+@Table(name = "book")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     Long id;
     String title;
     LocalDate publicationYear;
 
-    @ManyToOne
-    @JoinColumn(name = "AUTHOR_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     Author author;
 
     @OneToMany(
-            targetEntity = Volume.class,
             mappedBy = "book",
-            cascade = CascadeType.PERSIST
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     List<Volume> volumes = new ArrayList<>();
+
+    public void addVolume(Volume volume){
+        volumes.add(volume);
+        volume.setBook(this);
+    }
+
+    public void removeBook(Volume volume){
+        volumes.remove(volume);
+        volume.setBook(null);
+    }
 }

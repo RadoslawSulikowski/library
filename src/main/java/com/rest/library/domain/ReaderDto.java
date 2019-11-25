@@ -18,5 +18,5 @@ public class ReaderDto {
     String firstName;
     String lastName;
     LocalDate creationDate;
-    List<BorrowingDto> borrowingDtos;
+    List<BorrowingDto> borrowingDtoList;
 }

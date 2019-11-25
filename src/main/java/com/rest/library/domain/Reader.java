@@ -14,22 +14,30 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
-@Entity
-@Table(name = "READERS")
+@Entity(name = "Reader")
+@Table(name = "reader")
 public class Reader {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "READER_ID")
+    @GeneratedValue
     Long id;
     String firstName;
     String lastName;
     LocalDate creationDate;
 
     @OneToMany(
-            targetEntity = Borrowing.class,
-            cascade = CascadeType.PERSIST,
             mappedBy = "reader",
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     List<Borrowing> borrowings = new ArrayList<>();
+
+    public void addBorrowing(Borrowing borrowing){
+        borrowings.add(borrowing);
+        borrowing.setReader(this);
+    }
+
+    public void removeBorrowing(Borrowing borrowing) {
+        borrowings.remove(borrowing);
+        borrowing.setReader(null);
+    }
 }

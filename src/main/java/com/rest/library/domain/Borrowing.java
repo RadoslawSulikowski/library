@@ -12,22 +12,21 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Setter
 @Getter
-@Entity
-@Table(name = "BORROWINGS")
+@Entity(name = "Borrowing")
+@Table(name = "borrowing")
 public class Borrowing {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "VOLUME_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "volume_id")
     Volume volume;
 
-    @ManyToOne
-    @JoinColumn(name = "READER_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reader_id")
     Reader reader;
 
     LocalDate borrowingDate;
     LocalDate returningDate;
-
 }
