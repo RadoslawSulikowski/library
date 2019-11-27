@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 public class VolumeDto {
     Long id;
-    BookDto bookDto;
+    Long bookId;
     String status;
-    List<BorrowingDto> borrowingDtoList;
+    List<Long> borrowingIdList = new ArrayList<>();
 }

@@ -27,6 +27,6 @@ public class Borrowing {
     @JoinColumn(name = "reader_id")
     Reader reader;
 
-    LocalDate borrowingDate;
+    LocalDate borrowingDate = LocalDate.now();
     LocalDate returningDate;
 }

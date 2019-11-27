@@ -31,13 +31,36 @@ public class Author {
     )
     List<Book> books = new ArrayList<>();
 
-    public void addBook(Book book){
-        books.add(book);
-        book.setAuthor(this);
+    public Author(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public void removeBook(Book book){
+    public Author(String firstName, String lastName, List<Book> books) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.books = books;
+    }
+
+    public Author addBook(Book book) {
+        books.add(book);
+        book.setAuthor(this);
+        return this;
+    }
+
+    public Author removeBook(Book book) {
         books.remove(book);
         book.setAuthor(null);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", books=" + books +
+                '}';
     }
 }

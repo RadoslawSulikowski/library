@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @Getter
 public class BorrowingDto {
     Long id;
-    VolumeDto volumeDto;
-    ReaderDto readerDto;
+    Long volumeId;
+    Long readerId;
     LocalDate borrowingDate;
     LocalDate returningDate;
 

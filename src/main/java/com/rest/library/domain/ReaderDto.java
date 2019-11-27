@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -18,5 +19,5 @@ public class ReaderDto {
     String firstName;
     String lastName;
     LocalDate creationDate;
-    List<BorrowingDto> borrowingDtoList;
+    List<Long> borrowingIdList = new ArrayList<>();
 }

@@ -22,7 +22,7 @@ public class Reader {
     Long id;
     String firstName;
     String lastName;
-    LocalDate creationDate;
+    LocalDate creationDate = LocalDate.now();
 
     @OneToMany(
             mappedBy = "reader",

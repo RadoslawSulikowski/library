@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class Book {
     @GeneratedValue
     Long id;
     String title;
-    LocalDate publicationYear;
+    int publicationYear;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
@@ -34,12 +33,12 @@ public class Book {
     )
     List<Volume> volumes = new ArrayList<>();
 
-    public void addVolume(Volume volume){
+    public void addVolume(Volume volume) {
         volumes.add(volume);
         volume.setBook(this);
     }
 
-    public void removeBook(Volume volume){
+    public void removeBook(Volume volume) {
         volumes.remove(volume);
         volume.setBook(null);
     }

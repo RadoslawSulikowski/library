@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -15,8 +15,8 @@ import java.util.List;
 public class BookDto {
     Long id;
     String title;
-    LocalDate publicationYear;
-    AuthorDto authorDto;
-    List<VolumeDto> volumeDtoList;
+    int publicationYear;
+    Long authorId;
+    List<Long> volumeIdList = new ArrayList<>();
 
 }
