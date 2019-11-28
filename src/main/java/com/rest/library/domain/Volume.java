@@ -15,10 +15,11 @@ import java.util.List;
 @Getter
 @Entity(name = "Volume")
 @Table(name = "volume")
-//@NamedQuery(
-//        name = "Volume.getAvailableVolumes",
-//        query = "FROM volume WHERE status = 'to borrow'"
-//)
+@NamedQuery(
+        name = "Volume.getNumberOfAvailableVolumesOfBook",
+        query = "SELECT COUNT(*) FROM Volume WHERE status='toBorrow' AND book_id=:bookId"
+)
+
 public class Volume {
     @Id
     @GeneratedValue

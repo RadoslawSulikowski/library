@@ -31,7 +31,7 @@ public class Reader {
     )
     List<Borrowing> borrowings = new ArrayList<>();
 
-    public void addBorrowing(Borrowing borrowing){
+    public void addBorrowing(Borrowing borrowing) {
         borrowings.add(borrowing);
         borrowing.setReader(this);
     }

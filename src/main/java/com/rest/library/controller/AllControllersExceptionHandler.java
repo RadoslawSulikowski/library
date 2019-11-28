@@ -1,13 +1,12 @@
 package com.rest.library.controller;
 
-import com.rest.library.exceptions.AuthorNotFoundException;
-import com.rest.library.exceptions.BookNotFoundException;
-import com.rest.library.exceptions.BorrowingNotFoundException;
-import com.rest.library.exceptions.ReaderNotFoundException;
+import com.rest.library.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class AllControllersExceptionHandler {
@@ -19,21 +18,69 @@ public class AllControllersExceptionHandler {
         return "No such author";
     }
 
+    @ExceptionHandler(AuthorCantBeDeletedException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Author has assigned Book(s) and can't be deleted")
+    public String authorCantBeDeletedExceptionHandler() {
+        LOGGER.error("Author has assigned Book(s) and can't be deleted");
+        return "Author has assigned Book(s) and can't be deleted";
+    }
+
+    @ExceptionHandler(AuthorAlreadyExistException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Author with given id already exist")
+    public String authorAlreadyEgzistExceptionHandler() {
+        LOGGER.error("Author with given id already exist");
+        return "Author with given id already exist";
+    }
+
     @ExceptionHandler(BookNotFoundException.class)
-    public String bookNotFoundExceptionHandler(){
+    public String bookNotFoundExceptionHandler() {
         LOGGER.error("No such book");
         return "No suc book";
     }
 
+    @ExceptionHandler(BookCantBeDeletedException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "There are volumes of this book in DB")
+    public String bookCantBeDeletedExceptionHandler() {
+        LOGGER.error("There are volumes of this book in DB");
+        return "There are volumes of this book in DB";
+    }
+
     @ExceptionHandler(BorrowingNotFoundException.class)
-    public String borrowingNotFoundExceptionHandler(){
+    public String borrowingNotFoundExceptionHandler() {
         LOGGER.error("No such borrowing");
         return "No such borrowing";
     }
 
     @ExceptionHandler(ReaderNotFoundException.class)
-    public String readerNotFoundExceptionHandler(){
+    public String readerNotFoundExceptionHandler() {
         LOGGER.error("No such reader");
         return "No such reader";
+    }
+
+    @ExceptionHandler(ReaderAlreadyExistException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Reader with given id already exist!")
+    public String readerAlreadyExistExceptionHandler() {
+        LOGGER.error("Reader with given id already exist!");
+        return "Reader with given id already exist!";
+    }
+
+    @ExceptionHandler(ReaderCantBeDeletedException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Reader has assigned borrowings and can't be deleted")
+    public String readerCantBeDeletedExceptionHandler() {
+        LOGGER.error("Reader has assigned borrowings and can't be deleted");
+        return "Reader has assigned borrowings and can't be deleted";
+    }
+
+    @ExceptionHandler(VolumeNotFoundException.class)
+    public String volumeNotFoundExceptionHandler() {
+        LOGGER.error("No such volume");
+        return "No such volume";
+    }
+
+    @ExceptionHandler(VolumeCantBeDeletedException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Volume has borrowing(s) added and can't be deleted")
+    public String volumeCantBeDeletedExceptionHandler() {
+        LOGGER.error("Volume has borrowing(s) added and can't be deleted");
+        return "Volume has borrowing(s) added and can't be deleted";
     }
 }

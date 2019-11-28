@@ -20,8 +20,9 @@ import java.util.List;
 public class BorrowingMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BorrowingMapper.class);
+
     @Autowired
-    BorrowingRepository borrowingRepository;
+    private BorrowingRepository borrowingRepository;
 
     @Autowired
     private VolumeRepository volumeRepository;
