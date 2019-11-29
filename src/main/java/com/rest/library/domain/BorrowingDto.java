@@ -18,4 +18,8 @@ public class BorrowingDto {
     LocalDate borrowingDate;
     LocalDate returningDate;
 
+    public BorrowingDto(Long volumeId, Long readerId) {
+        this.volumeId = volumeId;
+        this.readerId = readerId;
+    }
 }

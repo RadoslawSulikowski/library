@@ -16,9 +16,11 @@ import java.util.List;
 @Entity(name = "Book")
 @Table(name = "book")
 public class Book {
+
     @Id
     @GeneratedValue
     Long id;
+
     String title;
     int publicationYear;
 
@@ -33,12 +35,18 @@ public class Book {
     )
     List<Volume> volumes = new ArrayList<>();
 
+    public Book(String title, int publicationYear, Author author) {
+        this.title = title;
+        this.publicationYear = publicationYear;
+        this.author = author;
+    }
+
     public void addVolume(Volume volume) {
         volumes.add(volume);
         volume.setBook(this);
     }
 
-    public void removeBook(Volume volume) {
+    public void removeVolume(Volume volume) {
         volumes.remove(volume);
         volume.setBook(null);
     }

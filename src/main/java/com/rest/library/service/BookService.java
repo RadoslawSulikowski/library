@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 public class BookService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(BookService.class);
     private static final String MSG = "There is no book with id: ";
 

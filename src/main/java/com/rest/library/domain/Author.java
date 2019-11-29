@@ -53,14 +53,4 @@ public class Author {
         book.setAuthor(null);
         return this;
     }
-
-    @Override
-    public String toString() {
-        return "Author{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", books=" + books +
-                '}';
-    }
 }

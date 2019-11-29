@@ -51,6 +51,13 @@ public class AllControllersExceptionHandler {
         return "No such borrowing";
     }
 
+    @ExceptionHandler(BorrowingAlreadyExistException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Borrowing with given id already exist!")
+    public String borrowingAlreadyExistExceptionHandler() {
+        LOGGER.error("Borrowing with given id already exist!");
+        return "Borrowing with given id already exist!";
+    }
+
     @ExceptionHandler(ReaderNotFoundException.class)
     public String readerNotFoundExceptionHandler() {
         LOGGER.error("No such reader");
