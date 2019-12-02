@@ -1,15 +1,24 @@
 package com.rest.library.service;
 
+import com.rest.library.domain.Borrowing;
 import com.rest.library.domain.BorrowingDto;
+import com.rest.library.domain.Reader;
+import com.rest.library.domain.Volume;
 import com.rest.library.exceptions.BorrowingNotFoundException;
+import com.rest.library.exceptions.ReaderNotFoundException;
+import com.rest.library.exceptions.VolumeAlreadyReturnedException;
+import com.rest.library.exceptions.VolumeNotFoundException;
 import com.rest.library.mapper.BorrowingMapper;
 import com.rest.library.repository.BorrowingRepository;
+import com.rest.library.repository.ReaderRepository;
+import com.rest.library.repository.VolumeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +34,57 @@ public class BorrowingService {
 
     @Autowired
     private BorrowingMapper borrowingMapper;
+
+    @Autowired
+    private VolumeRepository volumeRepository;
+
+    @Autowired
+    private ReaderRepository readerRepository;
+
+    public void borrowVolume(Long volumeId, Long readerId) throws VolumeNotFoundException, ReaderNotFoundException {
+        if (!volumeRepository.findById(volumeId).isPresent()) {
+            LOGGER.error("Can not add Borrowing" +
+                    " - Volume with id " + volumeId + " doesn't exist!");
+            throw new VolumeNotFoundException("Volume with id " + volumeId + " doesn't exist!");
+        } else if (!readerRepository.findById(readerId).isPresent()) {
+            LOGGER.error("Can not add Borrowing" +
+                    " - Reader with id " + readerId + " doesn't exist!");
+            throw new ReaderNotFoundException("Reader with id " + readerId + " doesn't exist!");
+        } else {
+            Volume volume = volumeRepository.findById(volumeId).get();
+            volume.setStatus("borrowed");
+            Reader reader = readerRepository.findById(readerId).get();
+            Borrowing borrowing = borrowingRepository.save(new Borrowing(volume, reader));
+            volumeRepository.save(volume.addBorrowing(borrowing));
+            readerRepository.save(reader.addBorrowing(borrowing));
+        }
+    }
+
+    public void returnVolume(Long volumeId) throws VolumeNotFoundException, BorrowingNotFoundException, VolumeAlreadyReturnedException {
+        if (!volumeRepository.findById(volumeId).isPresent()) {
+            LOGGER.error("Can not return Volume" +
+                    " - Volume with id " + volumeId + " doesn't exist!");
+            throw new VolumeNotFoundException("Volume with id " + volumeId + " doesn't exist!");
+        } else {
+            Volume volume = volumeRepository.findById(volumeId).get();
+            if (volume.getBorrowings() == null || volume.getBorrowings().isEmpty()) {
+                LOGGER.error("Given Volume has never been borrowed!");
+                throw new BorrowingNotFoundException("Given Volume has never been borrowed!");
+            } else {
+                Borrowing borrowing = volume.getBorrowings().get(volume.getBorrowings().size() - 1);
+                if (borrowing.getReturningDate() != null) {
+                    LOGGER.warn("Volume already returned");
+                    throw new VolumeAlreadyReturnedException("Volume already returned");
+                } else {
+                    volume.setStatus("returned");
+                    borrowing.setReturningDate(LocalDate.now());
+                    volumeRepository.save(volume);
+                    borrowingRepository.save(borrowing);
+                }
+            }
+        }
+    }
+
 
     public List<BorrowingDto> getAllBorrowings() {
         List<BorrowingDto> borrowingDtos = new ArrayList<>();

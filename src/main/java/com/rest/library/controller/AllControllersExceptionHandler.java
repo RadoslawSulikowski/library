@@ -70,4 +70,11 @@ public class AllControllersExceptionHandler {
         LOGGER.error("Volume has borrowing(s) added and can't be deleted");
         return "Volume has borrowing(s) added and can't be deleted";
     }
+
+    @ExceptionHandler(VolumeAlreadyReturnedException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Volume has no Borrowing without returning date")
+    public String volumeAlreadyReturnedExceptionHandler() {
+        LOGGER.warn("Volume has no Borrowing without returning date");
+        return "Volume has no Borrowing without returning date";
+    }
 }

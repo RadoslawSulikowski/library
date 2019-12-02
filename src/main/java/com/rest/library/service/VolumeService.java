@@ -2,13 +2,10 @@ package com.rest.library.service;
 
 import com.rest.library.domain.*;
 import com.rest.library.exceptions.BookNotFoundException;
-import com.rest.library.exceptions.ReaderNotFoundException;
 import com.rest.library.exceptions.VolumeCantBeDeletedException;
 import com.rest.library.exceptions.VolumeNotFoundException;
 import com.rest.library.mapper.VolumeMapper;
 import com.rest.library.repository.BookRepository;
-import com.rest.library.repository.BorrowingRepository;
-import com.rest.library.repository.ReaderRepository;
 import com.rest.library.repository.VolumeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +30,7 @@ public class VolumeService {
     private VolumeRepository volumeRepository;
 
     @Autowired
-    private BorrowingRepository borrowingRepository;
-
-    @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
-    private ReaderRepository readerRepository;
 
     public void addVolume(Long bookId, String status) throws BookNotFoundException {
         if (bookRepository.findById(bookId).isPresent()) {
@@ -70,25 +61,6 @@ public class VolumeService {
         } else {
             LOGGER.error(MSG + volumeId);
             throw new VolumeNotFoundException(MSG + volumeId);
-        }
-    }
-
-    public void borrowVolume(Long volumeId, Long readerId) throws VolumeNotFoundException, ReaderNotFoundException {
-        if (!volumeRepository.findById(volumeId).isPresent()) {
-            LOGGER.error("Can not add Borrowing" +
-                    " - Volume with id " + volumeId + " doesn't exist!");
-            throw new VolumeNotFoundException("Volume with id " + volumeId + " doesn't exist!");
-        } else if (!readerRepository.findById(readerId).isPresent()) {
-            LOGGER.error("Can not add Borrowing" +
-                    " - Reader with id " + readerId + " doesn't exist!");
-            throw new ReaderNotFoundException("Reader with id " + readerId + " doesn't exist!");
-        } else {
-            Volume volume = volumeRepository.findById(volumeId).get();
-            volume.setStatus("borrowed");
-            Reader reader = readerRepository.findById(readerId).get();
-            Borrowing borrowing = borrowingRepository.save(new Borrowing(volume, reader));
-            volumeRepository.save(volume.addBorrowing(borrowing));
-            readerRepository.save(reader.addBorrowing(borrowing));
         }
     }
 
