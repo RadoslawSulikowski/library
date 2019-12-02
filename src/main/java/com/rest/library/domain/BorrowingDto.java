@@ -12,14 +12,10 @@ import java.time.LocalDate;
 @Setter
 @Getter
 public class BorrowingDto {
+
     Long id;
     Long volumeId;
     Long readerId;
     LocalDate borrowingDate;
     LocalDate returningDate;
-
-    public BorrowingDto(Long volumeId, Long readerId) {
-        this.volumeId = volumeId;
-        this.readerId = readerId;
-    }
 }

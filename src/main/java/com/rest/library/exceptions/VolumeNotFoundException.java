@@ -1,6 +1,7 @@
 package com.rest.library.exceptions;
 
 public class VolumeNotFoundException extends Exception {
+
     public VolumeNotFoundException() {
         super();
     }

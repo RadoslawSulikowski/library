@@ -16,8 +16,8 @@ public class AuthorController {
     private AuthorService authorService;
 
     @RequestMapping(method = RequestMethod.POST, value = "addAuthor")
-    public void addAuthor(@RequestBody AuthorDto authorDto) throws BookNotFoundException, AuthorAlreadyExistException {
-        authorService.addAuthor(authorDto);
+    public void addAuthor(@RequestParam String firstName, @RequestParam String lastName) {
+        authorService.addAuthor(firstName, lastName);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getAuthor")
@@ -34,5 +34,4 @@ public class AuthorController {
     public void deleteAuthor(@RequestParam Long id) throws AuthorNotFoundException, AuthorCantBeDeletedException {
         authorService.deleteAuthor(id);
     }
-
 }

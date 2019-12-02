@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class AllControllersExceptionHandler {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AllControllersExceptionHandler.class);
 
     @ExceptionHandler(AuthorNotFoundException.class)
@@ -23,13 +24,6 @@ public class AllControllersExceptionHandler {
     public String authorCantBeDeletedExceptionHandler() {
         LOGGER.error("Author has assigned Book(s) and can't be deleted");
         return "Author has assigned Book(s) and can't be deleted";
-    }
-
-    @ExceptionHandler(AuthorAlreadyExistException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Author with given id already exist")
-    public String authorAlreadyEgzistExceptionHandler() {
-        LOGGER.error("Author with given id already exist");
-        return "Author with given id already exist";
     }
 
     @ExceptionHandler(BookNotFoundException.class)
@@ -51,24 +45,10 @@ public class AllControllersExceptionHandler {
         return "No such borrowing";
     }
 
-    @ExceptionHandler(BorrowingAlreadyExistException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Borrowing with given id already exist!")
-    public String borrowingAlreadyExistExceptionHandler() {
-        LOGGER.error("Borrowing with given id already exist!");
-        return "Borrowing with given id already exist!";
-    }
-
     @ExceptionHandler(ReaderNotFoundException.class)
     public String readerNotFoundExceptionHandler() {
         LOGGER.error("No such reader");
         return "No such reader";
-    }
-
-    @ExceptionHandler(ReaderAlreadyExistException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Reader with given id already exist!")
-    public String readerAlreadyExistExceptionHandler() {
-        LOGGER.error("Reader with given id already exist!");
-        return "Reader with given id already exist!";
     }
 
     @ExceptionHandler(ReaderCantBeDeletedException.class)

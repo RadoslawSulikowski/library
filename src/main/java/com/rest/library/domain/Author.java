@@ -36,12 +36,6 @@ public class Author {
         this.lastName = lastName;
     }
 
-    public Author(String firstName, String lastName, List<Book> books) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.books = books;
-    }
-
     public Author addBook(Book book) {
         books.add(book);
         book.setAuthor(this);

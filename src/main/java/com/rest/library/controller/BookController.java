@@ -16,8 +16,8 @@ public class BookController {
     private BookService bookService;
 
     @RequestMapping(method = RequestMethod.POST, value = "addBook")
-    public void addBook(@RequestBody BookDto bookDto) throws AuthorNotFoundException, ReaderNotFoundException, VolumeNotFoundException, BookNotFoundException {
-        bookService.addBook(bookDto);
+    public void addBook(@RequestParam String title, @RequestParam int publicationYear, @RequestParam Long authorId) throws AuthorNotFoundException {
+        bookService.addBook(title, publicationYear, authorId);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getBook")

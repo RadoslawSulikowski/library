@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @Getter
 public class VolumeDto {
+
     Long id;
     Long bookId;
     String status;

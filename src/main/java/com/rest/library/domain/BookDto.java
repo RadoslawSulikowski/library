@@ -13,10 +13,10 @@ import java.util.List;
 @Setter
 @Getter
 public class BookDto {
+
     Long id;
     String title;
     int publicationYear;
     Long authorId;
     List<Long> volumeIdList = new ArrayList<>();
-
 }

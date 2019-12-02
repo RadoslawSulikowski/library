@@ -21,6 +21,7 @@ import java.util.List;
 )
 
 public class Volume {
+
     @Id
     @GeneratedValue
     Long id;
@@ -28,6 +29,7 @@ public class Volume {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     Book book;
+
     String status;
 
     @OneToMany(
@@ -37,13 +39,20 @@ public class Volume {
     )
     List<Borrowing> borrowings = new ArrayList<>();
 
-    public void addBorrowing(Borrowing borrowing) {
-        borrowings.add(borrowing);
-        borrowing.setVolume(this);
+    public Volume(Book book, String status) {
+        this.book = book;
+        this.status = status;
     }
 
-    public void removeBorrowing(Borrowing borrowing) {
+    public Volume addBorrowing(Borrowing borrowing) {
+        borrowings.add(borrowing);
+        borrowing.setVolume(this);
+        return this;
+    }
+
+    public Volume removeBorrowing(Borrowing borrowing) {
         borrowings.remove(borrowing);
         borrowing.setVolume(null);
+        return this;
     }
 }

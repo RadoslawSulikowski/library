@@ -2,8 +2,6 @@ package com.rest.library.service;
 
 import com.rest.library.domain.Reader;
 import com.rest.library.domain.ReaderDto;
-import com.rest.library.exceptions.BorrowingNotFoundException;
-import com.rest.library.exceptions.ReaderAlreadyExistException;
 import com.rest.library.exceptions.ReaderCantBeDeletedException;
 import com.rest.library.exceptions.ReaderNotFoundException;
 import com.rest.library.mapper.ReaderMapper;
@@ -28,13 +26,8 @@ public class ReaderService {
     @Autowired
     private ReaderMapper readerMapper;
 
-    public void addReader(ReaderDto readerDto) throws BorrowingNotFoundException, ReaderAlreadyExistException {
-        if (readerDto.getId() != null && readerRepository.findById(readerDto.getId()).isPresent()) {
-            LOGGER.error("Can not add Reader - " +
-                    "Reader with id " + readerDto.getId() + " already exist!");
-            throw new ReaderAlreadyExistException("Reader with id " + readerDto.getId() + " already exist!");
-        }
-        Reader reader = readerRepository.save(readerMapper.mapToReader(readerDto));
+    public void addReader(String firstName, String lastName) {
+        Reader reader = readerRepository.save(new Reader(firstName, lastName));
         LOGGER.info("Reader successful added with id: " + reader.getId());
     }
 

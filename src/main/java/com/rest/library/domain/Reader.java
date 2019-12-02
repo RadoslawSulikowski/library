@@ -17,12 +17,14 @@ import java.util.List;
 @Entity(name = "Reader")
 @Table(name = "reader")
 public class Reader {
+
     @Id
     @GeneratedValue
     Long id;
+
     String firstName;
     String lastName;
-    LocalDate creationDate = LocalDate.now();
+    LocalDate creationDate;
 
     @OneToMany(
             mappedBy = "reader",
@@ -31,13 +33,21 @@ public class Reader {
     )
     List<Borrowing> borrowings = new ArrayList<>();
 
-    public void addBorrowing(Borrowing borrowing) {
-        borrowings.add(borrowing);
-        borrowing.setReader(this);
+    public Reader(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.creationDate = LocalDate.now();
     }
 
-    public void removeBorrowing(Borrowing borrowing) {
+    public Reader addBorrowing(Borrowing borrowing) {
+        borrowings.add(borrowing);
+        borrowing.setReader(this);
+        return this;
+    }
+
+    public Reader removeBorrowing(Borrowing borrowing) {
         borrowings.remove(borrowing);
         borrowing.setReader(null);
+        return this;
     }
 }

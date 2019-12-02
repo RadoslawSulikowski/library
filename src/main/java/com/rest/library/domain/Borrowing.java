@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Entity(name = "Borrowing")
 @Table(name = "borrowing")
 public class Borrowing {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
@@ -27,6 +28,12 @@ public class Borrowing {
     @JoinColumn(name = "reader_id")
     Reader reader;
 
-    LocalDate borrowingDate = LocalDate.now();
+    LocalDate borrowingDate;
     LocalDate returningDate;
+
+    public Borrowing(Volume volume, Reader reader) {
+        this.volume = volume;
+        this.reader = reader;
+        borrowingDate = LocalDate.now();
+    }
 }

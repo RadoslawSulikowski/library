@@ -1,5 +1,6 @@
 package com.rest.library.service;
 
+import com.rest.library.domain.Author;
 import com.rest.library.domain.Book;
 import com.rest.library.domain.BookDto;
 import com.rest.library.exceptions.*;
@@ -10,10 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service
 public class BookService {
 
@@ -21,18 +24,24 @@ public class BookService {
     private static final String MSG = "There is no book with id: ";
 
     @Autowired
+    private BookMapper bookMapper;
+
+    @Autowired
     private BookRepository bookRepository;
 
     @Autowired
     private AuthorRepository authorRepository;
 
-    @Autowired
-    private BookMapper bookMapper;
-
-    public void addBook(BookDto bookDto) throws AuthorNotFoundException, VolumeNotFoundException {
-        Book book = bookRepository.save(bookMapper.mapToBook(bookDto));
-        authorRepository.save(book.getAuthor().addBook(book));
-        LOGGER.info("Book successful added with id " + book.getId());
+    public void addBook(String title, int publicationYear, Long authorId) throws AuthorNotFoundException {
+        if (authorRepository.findById(authorId).isPresent()) {
+            Author author = authorRepository.findById(authorId).get();
+            Book book = bookRepository.save(new Book(title, publicationYear, author));
+            authorRepository.save(author.addBook(book));
+            LOGGER.info("Book successful added with id " + book.getId());
+        } else {
+            LOGGER.error("Can't add Book - there is no author with id " + authorId);
+            throw new AuthorNotFoundException("Can't add Book - there is no author with id " + authorId);
+        }
     }
 
     public BookDto getBook(Long id) throws BookNotFoundException {
@@ -48,7 +57,6 @@ public class BookService {
         bookRepository.findAll().forEach(b -> bookDtos.add(bookMapper.mapToBookDto(b)));
         return bookDtos;
     }
-
 
     public void deleteBook(Long id) throws BookNotFoundException, BookCantBeDeletedException {
         if (bookRepository.findById(id).isPresent()) {

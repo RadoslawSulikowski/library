@@ -1,8 +1,6 @@
 package com.rest.library.controller;
 
 import com.rest.library.domain.ReaderDto;
-import com.rest.library.exceptions.BorrowingNotFoundException;
-import com.rest.library.exceptions.ReaderAlreadyExistException;
 import com.rest.library.exceptions.ReaderCantBeDeletedException;
 import com.rest.library.exceptions.ReaderNotFoundException;
 import com.rest.library.service.ReaderService;
@@ -19,8 +17,8 @@ public class ReaderController {
     private ReaderService readerService;
 
     @RequestMapping(method = RequestMethod.POST, value = "addReader")
-    public void addReader(@RequestBody ReaderDto readerDto) throws BorrowingNotFoundException, ReaderAlreadyExistException {
-        readerService.addReader(readerDto);
+    public void addReader(@RequestParam String firstName, @RequestParam String lastName) {
+        readerService.addReader(firstName, lastName);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getReader")

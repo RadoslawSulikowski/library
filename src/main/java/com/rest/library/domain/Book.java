@@ -41,13 +41,15 @@ public class Book {
         this.author = author;
     }
 
-    public void addVolume(Volume volume) {
+    public Book addVolume(Volume volume) {
         volumes.add(volume);
         volume.setBook(this);
+        return this;
     }
 
-    public void removeVolume(Volume volume) {
+    public Book removeVolume(Volume volume) {
         volumes.remove(volume);
         volume.setBook(null);
+        return this;
     }
 }

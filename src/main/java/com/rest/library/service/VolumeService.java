@@ -1,13 +1,14 @@
 package com.rest.library.service;
 
-import com.rest.library.domain.Volume;
-import com.rest.library.domain.VolumeDto;
+import com.rest.library.domain.*;
 import com.rest.library.exceptions.BookNotFoundException;
-import com.rest.library.exceptions.BorrowingNotFoundException;
+import com.rest.library.exceptions.ReaderNotFoundException;
 import com.rest.library.exceptions.VolumeCantBeDeletedException;
 import com.rest.library.exceptions.VolumeNotFoundException;
 import com.rest.library.mapper.VolumeMapper;
 import com.rest.library.repository.BookRepository;
+import com.rest.library.repository.BorrowingRepository;
+import com.rest.library.repository.ReaderRepository;
 import com.rest.library.repository.VolumeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,17 +33,24 @@ public class VolumeService {
     private VolumeRepository volumeRepository;
 
     @Autowired
+    private BorrowingRepository borrowingRepository;
+
+    @Autowired
     private BookRepository bookRepository;
 
-    public void addVolume(VolumeDto volumeDto) throws BookNotFoundException, BorrowingNotFoundException {
-        Volume volume = volumeRepository.save(volumeMapper.mapToVolume(volumeDto));
-        LOGGER.info("Volume successful added with id: " + volume.getId());
-    }
+    @Autowired
+    private ReaderRepository readerRepository;
 
-    public List<VolumeDto> getAllVolumes() {
-        List<VolumeDto> volumeDtos = new ArrayList<>();
-        volumeRepository.findAll().forEach(v -> volumeDtos.add(volumeMapper.mapToVolumeDto(v)));
-        return volumeDtos;
+    public void addVolume(Long bookId, String status) throws BookNotFoundException {
+        if (bookRepository.findById(bookId).isPresent()) {
+            Book book = bookRepository.findById(bookId).get();
+            Volume volume = volumeRepository.save(new Volume(book, status));
+            bookRepository.save(book.addVolume(volume));
+            LOGGER.info("Volume successful added with id: " + volume.getId());
+        } else {
+            LOGGER.error("Can't add Volume - there is no Book with id " + bookId);
+            throw new BookNotFoundException("Can't add Volume - there is no Book with id " + bookId);
+        }
     }
 
     public int getNumberOfAvailableVolumesOfBook(Long bookId) throws BookNotFoundException {
@@ -51,6 +59,36 @@ public class VolumeService {
         } else {
             LOGGER.error("There is no book with id " + bookId);
             throw new BookNotFoundException("There is no book with id " + bookId);
+        }
+    }
+
+    public VolumeDto changeVolumeStatus(Long volumeId, String newStatus) throws VolumeNotFoundException {
+        if (volumeRepository.findById(volumeId).isPresent()) {
+            Volume volume = volumeRepository.findById(volumeId).get();
+            volume.setStatus(newStatus);
+            return volumeMapper.mapToVolumeDto(volumeRepository.save(volume));
+        } else {
+            LOGGER.error(MSG + volumeId);
+            throw new VolumeNotFoundException(MSG + volumeId);
+        }
+    }
+
+    public void borrowVolume(Long volumeId, Long readerId) throws VolumeNotFoundException, ReaderNotFoundException {
+        if (!volumeRepository.findById(volumeId).isPresent()) {
+            LOGGER.error("Can not add Borrowing" +
+                    " - Volume with id " + volumeId + " doesn't exist!");
+            throw new VolumeNotFoundException("Volume with id " + volumeId + " doesn't exist!");
+        } else if (!readerRepository.findById(readerId).isPresent()) {
+            LOGGER.error("Can not add Borrowing" +
+                    " - Reader with id " + readerId + " doesn't exist!");
+            throw new ReaderNotFoundException("Reader with id " + readerId + " doesn't exist!");
+        } else {
+            Volume volume = volumeRepository.findById(volumeId).get();
+            volume.setStatus("borrowed");
+            Reader reader = readerRepository.findById(readerId).get();
+            Borrowing borrowing = borrowingRepository.save(new Borrowing(volume, reader));
+            volumeRepository.save(volume.addBorrowing(borrowing));
+            readerRepository.save(reader.addBorrowing(borrowing));
         }
     }
 
@@ -63,15 +101,10 @@ public class VolumeService {
         }
     }
 
-    public VolumeDto changeVolumeStatus(String status, Long volumeId) throws VolumeNotFoundException {
-        if (volumeRepository.findById(volumeId).isPresent()) {
-            Volume volume = volumeRepository.findById(volumeId).get();
-            volume.setStatus(status);
-            return volumeMapper.mapToVolumeDto(volumeRepository.save(volume));
-        } else {
-            LOGGER.error(MSG + volumeId);
-            throw new VolumeNotFoundException(MSG + volumeId);
-        }
+    public List<VolumeDto> getAllVolumes() {
+        List<VolumeDto> volumeDtos = new ArrayList<>();
+        volumeRepository.findAll().forEach(v -> volumeDtos.add(volumeMapper.mapToVolumeDto(v)));
+        return volumeDtos;
     }
 
     public void deleteVolume(Long id) throws VolumeNotFoundException, VolumeCantBeDeletedException {

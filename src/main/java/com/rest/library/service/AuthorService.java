@@ -25,13 +25,8 @@ public class AuthorService {
     @Autowired
     private AuthorMapper authorMapper;
 
-    public void addAuthor(AuthorDto authorDto) throws BookNotFoundException, AuthorAlreadyExistException {
-        if (authorDto.getId() != null && authorRepository.findById(authorDto.getId()).isPresent()) {
-            LOGGER.error("Can not add Author - " +
-                    "Author with id " + authorDto.getId() + " already exist!");
-            throw new AuthorAlreadyExistException("Author with id " + authorDto.getId() + " already exist!");
-        }
-        Author author = authorRepository.save(authorMapper.mapToAuthor(authorDto));
+    public void addAuthor(String firstName, String lastName) {
+        Author author = authorRepository.save(new Author(firstName, lastName));
         LOGGER.info("Author successful added with id: " + author.getId());
     }
 
