@@ -32,12 +32,13 @@ public class BookService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    public void addBook(String title, int publicationYear, Long authorId) throws AuthorNotFoundException {
+    public Long addBook(String title, int publicationYear, Long authorId) throws AuthorNotFoundException {
         if (authorRepository.findById(authorId).isPresent()) {
             Author author = authorRepository.findById(authorId).get();
             Book book = bookRepository.save(new Book(title, publicationYear, author));
             authorRepository.save(author.addBook(book));
             LOGGER.info("Book successful added with id " + book.getId());
+            return book.getId();
         } else {
             LOGGER.error("Can't add Book - there is no author with id " + authorId);
             throw new AuthorNotFoundException("Can't add Book - there is no author with id " + authorId);

@@ -23,7 +23,8 @@ import java.util.List;
 public class Volume {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,6 +34,7 @@ public class Volume {
     String status;
 
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "volume",
             cascade = CascadeType.ALL,
             orphanRemoval = true

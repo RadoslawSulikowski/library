@@ -25,9 +25,10 @@ public class AuthorService {
     @Autowired
     private AuthorMapper authorMapper;
 
-    public void addAuthor(String firstName, String lastName) {
+    public Long addAuthor(String firstName, String lastName) {
         Author author = authorRepository.save(new Author(firstName, lastName));
         LOGGER.info("Author successful added with id: " + author.getId());
+        return author.getId();
     }
 
     public AuthorDto getAuthor(Long id) throws AuthorNotFoundException {

@@ -18,7 +18,8 @@ import java.util.List;
 public class Book {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
     Long id;
 
     String title;
@@ -29,6 +30,7 @@ public class Book {
     Author author;
 
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "book",
             cascade = CascadeType.ALL,
             orphanRemoval = true

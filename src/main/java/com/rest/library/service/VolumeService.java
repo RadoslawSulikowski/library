@@ -32,12 +32,13 @@ public class VolumeService {
     @Autowired
     private BookRepository bookRepository;
 
-    public void addVolume(Long bookId, String status) throws BookNotFoundException {
+    public Long addVolume(Long bookId, String status) throws BookNotFoundException {
         if (bookRepository.findById(bookId).isPresent()) {
             Book book = bookRepository.findById(bookId).get();
             Volume volume = volumeRepository.save(new Volume(book, status));
             bookRepository.save(book.addVolume(volume));
             LOGGER.info("Volume successful added with id: " + volume.getId());
+            return volume.getId();
         } else {
             LOGGER.error("Can't add Volume - there is no Book with id " + bookId);
             throw new BookNotFoundException("Can't add Volume - there is no Book with id " + bookId);
@@ -82,6 +83,7 @@ public class VolumeService {
     public void deleteVolume(Long id) throws VolumeNotFoundException, VolumeCantBeDeletedException {
         if (volumeRepository.findById(id).isPresent()) {
             if (volumeRepository.findById(id).get().getBorrowings().isEmpty()) {
+                bookRepository.save(volumeRepository.findById(id).get().getBook().removeVolume(volumeRepository.findById(id).get()));
                 volumeRepository.deleteById(id);
                 LOGGER.info("Volume with id " + id + " was successful deleted.");
             } else {

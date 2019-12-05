@@ -19,7 +19,8 @@ import java.util.List;
 public class Reader {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
     Long id;
 
     String firstName;
@@ -27,6 +28,7 @@ public class Reader {
     LocalDate creationDate;
 
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "reader",
             cascade = CascadeType.ALL,
             orphanRemoval = true

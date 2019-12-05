@@ -18,6 +18,7 @@ public class Borrowing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

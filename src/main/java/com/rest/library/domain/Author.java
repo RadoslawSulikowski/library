@@ -18,13 +18,15 @@ import java.util.List;
 public class Author {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
     Long id;
 
     String firstName;
     String lastName;
 
     @OneToMany(
+            fetch = FetchType.LAZY,
             mappedBy = "author",
             cascade = CascadeType.ALL,
             orphanRemoval = true
