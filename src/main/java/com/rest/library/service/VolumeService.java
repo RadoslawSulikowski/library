@@ -4,6 +4,7 @@ import com.rest.library.domain.*;
 import com.rest.library.exceptions.BookNotFoundException;
 import com.rest.library.exceptions.VolumeCantBeDeletedException;
 import com.rest.library.exceptions.VolumeNotFoundException;
+import com.rest.library.exceptions.VolumeStatusCantBeChangedException;
 import com.rest.library.mapper.VolumeMapper;
 import com.rest.library.repository.BookRepository;
 import com.rest.library.repository.VolumeRepository;
@@ -54,11 +55,18 @@ public class VolumeService {
         }
     }
 
-    public VolumeDto changeVolumeStatus(Long volumeId, String newStatus) throws VolumeNotFoundException {
+    public VolumeDto changeVolumeStatus(Long volumeId, String newStatus) throws VolumeNotFoundException, VolumeStatusCantBeChangedException {
         if (volumeRepository.findById(volumeId).isPresent()) {
             Volume volume = volumeRepository.findById(volumeId).get();
-            volume.setStatus(newStatus);
-            return volumeMapper.mapToVolumeDto(volumeRepository.save(volume));
+            if (volume.hasBorrowingWithoutReturningDate()) {
+                LOGGER.warn("Volume has status 'borrowed' and has borrowing with no returning date. " +
+                        "Return volume.");
+                throw new VolumeStatusCantBeChangedException("Volume has status 'borrowed'and has borrowing with no returning date. " +
+                        "To change status from 'borrowed' you can only use return volume.");
+            } else {
+                volume.setStatus(newStatus);
+                return volumeMapper.mapToVolumeDto(volumeRepository.save(volume));
+            }
         } else {
             LOGGER.error(MSG + volumeId);
             throw new VolumeNotFoundException(MSG + volumeId);

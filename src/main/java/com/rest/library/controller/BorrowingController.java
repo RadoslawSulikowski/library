@@ -1,10 +1,7 @@
 package com.rest.library.controller;
 
 import com.rest.library.domain.BorrowingDto;
-import com.rest.library.exceptions.BorrowingNotFoundException;
-import com.rest.library.exceptions.ReaderNotFoundException;
-import com.rest.library.exceptions.VolumeAlreadyReturnedException;
-import com.rest.library.exceptions.VolumeNotFoundException;
+import com.rest.library.exceptions.*;
 import com.rest.library.service.BorrowingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +21,7 @@ public class BorrowingController {
 
     @RequestMapping(method = RequestMethod.POST, value = "borrowVolume")
     public void borrowVolume(@RequestParam @NotNull Long volumeId, @RequestParam @NotNull Long readerId)
-            throws VolumeNotFoundException, ReaderNotFoundException {
+            throws VolumeNotFoundException, ReaderNotFoundException, VolumeCantBeBorrowedException {
         borrowingService.borrowVolume(volumeId, readerId);
     }
 

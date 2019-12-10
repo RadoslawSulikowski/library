@@ -77,4 +77,18 @@ public class AllControllersExceptionHandler {
         LOGGER.warn("Volume has no Borrowing without returning date");
         return "Volume has no Borrowing without returning date";
     }
+
+    @ExceptionHandler(VolumeStatusCantBeChangedException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Can not change status of borrowed Volume! Return Volume first!")
+    public String volumeStatusCantBeChangedExceptionHandler() {
+        LOGGER.error("Can not change status of borrowed Volume!");
+        return "Can not change status of borrowed Volume!";
+    }
+
+    @ExceptionHandler(VolumeCantBeBorrowedException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Volume is not to borrow!")
+    public String volumeCantBeBorrowedExceptionHandler() {
+        LOGGER.error("Volume is not to borrow!");
+        return "Volume is not to borrow!";
+    }
 }

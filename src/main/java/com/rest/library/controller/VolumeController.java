@@ -4,6 +4,7 @@ import com.rest.library.domain.VolumeDto;
 import com.rest.library.exceptions.BookNotFoundException;
 import com.rest.library.exceptions.VolumeCantBeDeletedException;
 import com.rest.library.exceptions.VolumeNotFoundException;
+import com.rest.library.exceptions.VolumeStatusCantBeChangedException;
 import com.rest.library.service.VolumeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,8 @@ public class VolumeController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "changeVolumeStatus")
-    public VolumeDto changeVolumeStatus(@RequestParam Long volumeId, @RequestParam String newStatus) throws VolumeNotFoundException {
+    public VolumeDto changeVolumeStatus(@RequestParam Long volumeId, @RequestParam String newStatus)
+            throws VolumeNotFoundException, VolumeStatusCantBeChangedException {
         return volumeService.changeVolumeStatus(volumeId, newStatus);
     }
 

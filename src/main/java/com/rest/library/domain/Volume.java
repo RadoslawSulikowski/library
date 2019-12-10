@@ -31,7 +31,7 @@ public class Volume {
     @JoinColumn(name = "book_id")
     Book book;
 
-    String status;
+    String status = "";
 
     @OneToMany(
             fetch = FetchType.LAZY,
@@ -56,5 +56,12 @@ public class Volume {
         borrowings.remove(borrowing);
         borrowing.setVolume(null);
         return this;
+    }
+
+    public boolean hasBorrowingWithoutReturningDate() {
+        if (borrowings.isEmpty()) {
+            return false;
+        }
+        return borrowings.get(borrowings.size() - 1).getReturningDate() == null;
     }
 }

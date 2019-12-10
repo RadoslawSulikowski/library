@@ -1,12 +1,10 @@
 package com.rest.library.service;
 
+import com.rest.library.domain.Book;
 import com.rest.library.domain.Borrowing;
 import com.rest.library.domain.Reader;
 import com.rest.library.domain.Volume;
-import com.rest.library.exceptions.BorrowingNotFoundException;
-import com.rest.library.exceptions.ReaderNotFoundException;
-import com.rest.library.exceptions.VolumeAlreadyReturnedException;
-import com.rest.library.exceptions.VolumeNotFoundException;
+import com.rest.library.exceptions.*;
 import com.rest.library.repository.BorrowingRepository;
 import com.rest.library.repository.ReaderRepository;
 import com.rest.library.repository.VolumeRepository;
@@ -40,9 +38,10 @@ public class BorrowingServiceTestSuite {
     private ReaderRepository readerRepository;
 
     @Test
-    public void testBorrowVolume() throws VolumeNotFoundException, ReaderNotFoundException {
+    public void testBorrowVolume()
+            throws VolumeNotFoundException, ReaderNotFoundException, VolumeCantBeBorrowedException {
         //Given
-        Volume volume = volumeRepository.save(new Volume());
+        Volume volume = volumeRepository.save(new Volume(new Book(), "toBorrow"));
         Long volumeId = volume.getId();
         Reader reader = readerRepository.save(new Reader());
         Long readerId = reader.getId();
@@ -63,7 +62,8 @@ public class BorrowingServiceTestSuite {
     }
 
     @Test(expected = VolumeNotFoundException.class)
-    public void testBorrowVolumeThrowsVolumeNotFoundException() throws VolumeNotFoundException, ReaderNotFoundException {
+    public void testBorrowVolumeThrowsVolumeNotFoundException()
+            throws VolumeNotFoundException, ReaderNotFoundException, VolumeCantBeBorrowedException {
         //Given
         Reader reader = readerRepository.save(new Reader());
         Long readerId = reader.getId();
@@ -81,7 +81,8 @@ public class BorrowingServiceTestSuite {
     }
 
     @Test(expected = ReaderNotFoundException.class)
-    public void testBorrowVolumeThrowsReaderNotFoundException() throws VolumeNotFoundException, ReaderNotFoundException {
+    public void testBorrowVolumeThrowsReaderNotFoundException()
+            throws VolumeNotFoundException, ReaderNotFoundException, VolumeCantBeBorrowedException {
         //Given
         Volume volume = volumeRepository.save(new Volume());
         Long volumeId = volume.getId();
@@ -98,11 +99,36 @@ public class BorrowingServiceTestSuite {
         }
     }
 
+    @Test(expected = VolumeCantBeBorrowedException.class)
+    public void testBorrowVolumeThrowsVolumeCantBeBorrowedException()
+            throws VolumeNotFoundException, ReaderNotFoundException, VolumeCantBeBorrowedException {
+        //Given
+        Volume volume = (new Volume());
+        volume.setStatus("Test Status different than 'toBorrow'");
+        volumeRepository.save(volume);
+        Long volumeId = volume.getId();
+        Reader reader = readerRepository.save(new Reader());
+        Long readerId = reader.getId();
+
+        //When
+        try {
+            borrowingService.borrowVolume(volumeId, readerId);
+
+            //Then
+            //throw VolumeCantBeBorrowedException
+        } finally {
+            //CleanUp
+            volumeRepository.deleteById(volumeId);
+            readerRepository.deleteById(readerId);
+        }
+    }
+
     @Test
     public void testReturnVolume()
-            throws VolumeNotFoundException, ReaderNotFoundException, BorrowingNotFoundException, VolumeAlreadyReturnedException {
+            throws VolumeNotFoundException, ReaderNotFoundException, BorrowingNotFoundException,
+            VolumeAlreadyReturnedException, VolumeCantBeBorrowedException {
         //Given
-        Volume volume = volumeRepository.save(new Volume());
+        Volume volume = volumeRepository.save(new Volume(new Book(), "toBorrow"));
         Long volumeId = volume.getId();
         Reader reader = readerRepository.save(new Reader());
         Long readerId = reader.getId();
@@ -152,9 +178,10 @@ public class BorrowingServiceTestSuite {
 
     @Test(expected = VolumeAlreadyReturnedException.class)
     public void testReturnVolumeThrowsVolumeAlreadyReturnedException()
-            throws VolumeNotFoundException, ReaderNotFoundException, BorrowingNotFoundException, VolumeAlreadyReturnedException {
+            throws VolumeNotFoundException, ReaderNotFoundException, BorrowingNotFoundException,
+            VolumeAlreadyReturnedException, VolumeCantBeBorrowedException {
         //Given
-        Volume volume = volumeRepository.save(new Volume());
+        Volume volume = volumeRepository.save(new Volume(new Book(), "toBorrow"));
         Long volumeId = volume.getId();
         Reader reader = readerRepository.save(new Reader());
         Long readerId = reader.getId();

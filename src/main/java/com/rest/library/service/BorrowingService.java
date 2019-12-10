@@ -4,10 +4,7 @@ import com.rest.library.domain.Borrowing;
 import com.rest.library.domain.BorrowingDto;
 import com.rest.library.domain.Reader;
 import com.rest.library.domain.Volume;
-import com.rest.library.exceptions.BorrowingNotFoundException;
-import com.rest.library.exceptions.ReaderNotFoundException;
-import com.rest.library.exceptions.VolumeAlreadyReturnedException;
-import com.rest.library.exceptions.VolumeNotFoundException;
+import com.rest.library.exceptions.*;
 import com.rest.library.mapper.BorrowingMapper;
 import com.rest.library.repository.BorrowingRepository;
 import com.rest.library.repository.ReaderRepository;
@@ -42,7 +39,8 @@ public class BorrowingService {
     @Autowired
     private ReaderRepository readerRepository;
 
-    public Long borrowVolume(Long volumeId, Long readerId) throws VolumeNotFoundException, ReaderNotFoundException {
+    public Long borrowVolume(Long volumeId, Long readerId)
+            throws VolumeNotFoundException, ReaderNotFoundException, VolumeCantBeBorrowedException {
         if (!volumeRepository.findById(volumeId).isPresent()) {
             LOGGER.error("Can not add Borrowing" +
                     " - Volume with id " + volumeId + " doesn't exist!");
@@ -51,6 +49,9 @@ public class BorrowingService {
             LOGGER.error("Can not add Borrowing" +
                     " - Reader with id " + readerId + " doesn't exist!");
             throw new ReaderNotFoundException("Reader with id " + readerId + " doesn't exist!");
+        } else if (!volumeRepository.findById(volumeId).get().getStatus().equals("toBorrow")) {
+            LOGGER.error("Volume with different status than 'toBorrow' can't be borrowed.");
+            throw new VolumeCantBeBorrowedException("Volume with different status than 'toBorrow' can't be borrowed.");
         } else {
             Volume volume = volumeRepository.findById(volumeId).get();
             volume.setStatus("borrowed");

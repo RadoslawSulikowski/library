@@ -32,6 +32,7 @@ public class Borrowing {
 
     @Column(name = "borrowingDate", updatable = false, nullable = false)
     LocalDateTime borrowingDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
     LocalDateTime returningDate;
 
     public Borrowing(Volume volume, Reader reader) {

@@ -7,7 +7,9 @@ import com.rest.library.domain.VolumeDto;
 import com.rest.library.exceptions.BookNotFoundException;
 import com.rest.library.exceptions.VolumeCantBeDeletedException;
 import com.rest.library.exceptions.VolumeNotFoundException;
+import com.rest.library.exceptions.VolumeStatusCantBeChangedException;
 import com.rest.library.repository.BookRepository;
+import com.rest.library.repository.BorrowingRepository;
 import com.rest.library.repository.VolumeRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +35,9 @@ public class VolumeServiceTestSuite {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private BorrowingRepository borrowingRepository;
 
     @Test
     public void testAddVolume() throws BookNotFoundException {
@@ -102,7 +107,7 @@ public class VolumeServiceTestSuite {
     }
 
     @Test
-    public void testChangeVolumeStatus() throws VolumeNotFoundException {
+    public void testChangeVolumeStatus() throws VolumeNotFoundException, VolumeStatusCantBeChangedException {
         //Given
         Book book = bookRepository.save(new Book());
         Long bookId = book.getId();
@@ -121,7 +126,8 @@ public class VolumeServiceTestSuite {
     }
 
     @Test(expected = VolumeNotFoundException.class)
-    public void testChangeVolumeStatusThrowsVolumeNotFoundException() throws VolumeNotFoundException {
+    public void testChangeVolumeStatusThrowsVolumeNotFoundException()
+            throws VolumeNotFoundException, VolumeStatusCantBeChangedException {
         //Given
 
         //When
@@ -131,6 +137,32 @@ public class VolumeServiceTestSuite {
         //throw VolumeNotFoundException
 
         //CleanUp
+    }
+
+    @Test(expected = VolumeStatusCantBeChangedException.class)
+    public void testChangeVolumeStatusThrowsVolumeStatusCantBeChangedException()
+            throws VolumeNotFoundException, VolumeStatusCantBeChangedException {
+        //Given
+        Book book = bookRepository.save(new Book());
+        Long bookId = book.getId();
+        Volume volume = volumeRepository.save(new Volume(book, TEST_VOLUME_STATUS));
+        Long volumeId = volume.getId();
+        Borrowing borrowing = borrowingRepository.save(new Borrowing());
+        Long borrowingId = borrowing.getId();
+        volume.addBorrowing(borrowing);
+        assertTrue(volumeRepository.findById(volumeId).isPresent());
+
+        //When
+        try {
+            volumeService.changeVolumeStatus(volumeId, "Changed volume status");
+
+            //Then
+            //throw VolumeStatusCantBeChangedException
+        } finally {
+            //CleanUp
+            borrowingRepository.deleteById(borrowingId);
+            bookRepository.deleteById(bookId);
+        }
     }
 
     @Test
