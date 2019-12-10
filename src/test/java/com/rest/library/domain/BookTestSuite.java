@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @Transactional
@@ -37,11 +39,13 @@ public class BookTestSuite {
         String bookTitle = book.getTitle();
         int bookPublicationYear = book.getPublicationYear();
         Author bookAuthor = book.getAuthor();
+        List<Volume> bookVolumes = book.getVolumes();
 
         //Then
         assertEquals(TEST_TITLE, bookTitle);
         assertEquals(TEST_PUBLICATION_YEAR, bookPublicationYear);
         assertEquals(author, bookAuthor);
+        assertNotNull(bookVolumes);
 
         //CleanUP
         bookRepository.deleteById(bookId);

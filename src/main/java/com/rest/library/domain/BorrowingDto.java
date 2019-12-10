@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +16,6 @@ public class BorrowingDto {
     Long id;
     Long volumeId;
     Long readerId;
-    LocalDate borrowingDate;
-    LocalDate returningDate;
+    LocalDateTime borrowingDate;
+    LocalDateTime returningDate;
 }

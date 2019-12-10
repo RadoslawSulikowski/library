@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,9 @@ public class Reader {
 
     String firstName;
     String lastName;
-    LocalDate creationDate;
+
+    @Column(name = "creationDate", updatable = false, nullable = false)
+    LocalDateTime creationDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     @OneToMany(
             fetch = FetchType.LAZY,
@@ -38,7 +41,6 @@ public class Reader {
     public Reader(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.creationDate = LocalDate.now();
     }
 
     public Reader addBorrowing(Borrowing borrowing) {

@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,12 +30,12 @@ public class Borrowing {
     @JoinColumn(name = "reader_id")
     Reader reader;
 
-    LocalDate borrowingDate;
-    LocalDate returningDate;
+    @Column(name = "borrowingDate", updatable = false, nullable = false)
+    LocalDateTime borrowingDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    LocalDateTime returningDate;
 
     public Borrowing(Volume volume, Reader reader) {
         this.volume = volume;
         this.reader = reader;
-        borrowingDate = LocalDate.now();
     }
 }

@@ -26,9 +26,10 @@ public class ReaderService {
     @Autowired
     private ReaderMapper readerMapper;
 
-    public void addReader(String firstName, String lastName) {
+    public Long addReader(String firstName, String lastName) {
         Reader reader = readerRepository.save(new Reader(firstName, lastName));
         LOGGER.info("Reader successful added with id: " + reader.getId());
+        return reader.getId();
     }
 
     public ReaderDto getReader(Long id) throws ReaderNotFoundException {

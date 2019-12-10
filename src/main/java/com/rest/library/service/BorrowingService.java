@@ -18,7 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class BorrowingService {
     @Autowired
     private ReaderRepository readerRepository;
 
-    public void borrowVolume(Long volumeId, Long readerId) throws VolumeNotFoundException, ReaderNotFoundException {
+    public Long borrowVolume(Long volumeId, Long readerId) throws VolumeNotFoundException, ReaderNotFoundException {
         if (!volumeRepository.findById(volumeId).isPresent()) {
             LOGGER.error("Can not add Borrowing" +
                     " - Volume with id " + volumeId + " doesn't exist!");
@@ -57,6 +58,8 @@ public class BorrowingService {
             Borrowing borrowing = borrowingRepository.save(new Borrowing(volume, reader));
             volumeRepository.save(volume.addBorrowing(borrowing));
             readerRepository.save(reader.addBorrowing(borrowing));
+            LOGGER.info("Volume with id " + volumeId + " successful borrowed by reader with id " + readerId);
+            return borrowing.getId();
         }
     }
 
@@ -77,7 +80,7 @@ public class BorrowingService {
                     throw new VolumeAlreadyReturnedException("Volume already returned");
                 } else {
                     volume.setStatus("returned");
-                    borrowing.setReturningDate(LocalDate.now());
+                    borrowing.setReturningDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
                     volumeRepository.save(volume);
                     borrowingRepository.save(borrowing);
                 }
