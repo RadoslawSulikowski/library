@@ -1,9 +1,6 @@
 package com.rest.library.service;
 
-import com.rest.library.domain.Borrowing;
-import com.rest.library.domain.BorrowingDto;
-import com.rest.library.domain.Reader;
-import com.rest.library.domain.Volume;
+import com.rest.library.domain.*;
 import com.rest.library.exceptions.*;
 import com.rest.library.mapper.BorrowingMapper;
 import com.rest.library.repository.BorrowingRepository;
@@ -39,8 +36,10 @@ public class BorrowingService {
     @Autowired
     private ReaderRepository readerRepository;
 
-    public Long borrowVolume(Long volumeId, Long readerId)
+    public Long borrowVolume(BorrowingBorrowDto borrowingBorrowDto)
             throws VolumeNotFoundException, ReaderNotFoundException, VolumeCantBeBorrowedException {
+        Long volumeId = borrowingBorrowDto.getVolumeId();
+        Long readerId = borrowingBorrowDto.getReaderId();
         if (!volumeRepository.findById(volumeId).isPresent()) {
             LOGGER.error("Can not add Borrowing" +
                     " - Volume with id " + volumeId + " doesn't exist!");
@@ -64,7 +63,9 @@ public class BorrowingService {
         }
     }
 
-    public void returnVolume(Long volumeId) throws VolumeNotFoundException, BorrowingNotFoundException, VolumeAlreadyReturnedException {
+    public void returnVolume(BorrowingReturnDto borrowingReturnDto)
+            throws VolumeNotFoundException, BorrowingNotFoundException, VolumeAlreadyReturnedException {
+        Long volumeId = borrowingReturnDto.getVolumeId();
         if (!volumeRepository.findById(volumeId).isPresent()) {
             LOGGER.error("Can not return Volume" +
                     " - Volume with id " + volumeId + " doesn't exist!");

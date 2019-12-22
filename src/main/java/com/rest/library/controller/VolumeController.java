@@ -1,6 +1,8 @@
 package com.rest.library.controller;
 
 import com.rest.library.domain.VolumeDto;
+import com.rest.library.domain.VolumeCreationDto;
+import com.rest.library.domain.VolumeModificationDto;
 import com.rest.library.exceptions.BookNotFoundException;
 import com.rest.library.exceptions.VolumeCantBeDeletedException;
 import com.rest.library.exceptions.VolumeNotFoundException;
@@ -19,8 +21,8 @@ public class VolumeController {
     VolumeService volumeService;
 
     @RequestMapping(method = RequestMethod.POST, value = "addVolume")
-    public void addVolume(@RequestParam Long bookId, @RequestParam String status) throws BookNotFoundException {
-        volumeService.addVolume(bookId, status);
+    public void addVolume(@RequestBody VolumeCreationDto volumeCreationDto) throws BookNotFoundException {
+        volumeService.addVolume(volumeCreationDto);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getNumberOfAvailableVolumesOfBook")
@@ -29,9 +31,9 @@ public class VolumeController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "changeVolumeStatus")
-    public VolumeDto changeVolumeStatus(@RequestParam Long volumeId, @RequestParam String newStatus)
+    public VolumeDto changeVolumeStatus(@RequestBody VolumeModificationDto volumeModificationDto)
             throws VolumeNotFoundException, VolumeStatusCantBeChangedException {
-        return volumeService.changeVolumeStatus(volumeId, newStatus);
+        return volumeService.changeVolumeStatus(volumeModificationDto);
     }
 
 

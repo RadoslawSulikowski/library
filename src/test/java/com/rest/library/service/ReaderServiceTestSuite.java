@@ -3,6 +3,7 @@ package com.rest.library.service;
 import com.rest.library.domain.Borrowing;
 import com.rest.library.domain.Reader;
 import com.rest.library.domain.ReaderDto;
+import com.rest.library.domain.ReaderSimpleDto;
 import com.rest.library.exceptions.ReaderCantBeDeletedException;
 import com.rest.library.exceptions.ReaderNotFoundException;
 import com.rest.library.repository.ReaderRepository;
@@ -35,7 +36,7 @@ public class ReaderServiceTestSuite {
         //Given
 
         //When
-        Long readerId = readerService.addReader(READER_FIRST_NAME, READER_LAST_NAME);
+        Long readerId = readerService.addReader(new ReaderSimpleDto(READER_FIRST_NAME, READER_LAST_NAME));
 
         //Then
         assertTrue(readerRepository.findById(readerId).isPresent());
@@ -47,7 +48,7 @@ public class ReaderServiceTestSuite {
     @Test
     public void testGetReader() throws ReaderNotFoundException {
         //Given
-        Long readerId = readerService.addReader(READER_FIRST_NAME, READER_LAST_NAME);
+        Long readerId = readerService.addReader(new ReaderSimpleDto(READER_FIRST_NAME, READER_LAST_NAME));
         assertTrue(readerRepository.findById(readerId).isPresent());
         Reader reader = readerRepository.findById(readerId).get();
         Borrowing b1 = new Borrowing();
@@ -87,7 +88,7 @@ public class ReaderServiceTestSuite {
     @Test
     public void testDeleteReader() throws ReaderNotFoundException, ReaderCantBeDeletedException {
         //Given
-        Long readerId = readerService.addReader(READER_FIRST_NAME, READER_LAST_NAME);
+        Long readerId = readerService.addReader(new ReaderSimpleDto(READER_FIRST_NAME, READER_LAST_NAME));
         assertTrue(readerRepository.findById(readerId).isPresent());
 
         //When
@@ -115,7 +116,7 @@ public class ReaderServiceTestSuite {
     @Test(expected = ReaderCantBeDeletedException.class)
     public void testDeleteReaderThrowsReaderCantBeDeletedException() throws ReaderNotFoundException, ReaderCantBeDeletedException {
         //Given
-        Long readerId = readerService.addReader(READER_FIRST_NAME, READER_LAST_NAME);
+        Long readerId = readerService.addReader(new ReaderSimpleDto(READER_FIRST_NAME, READER_LAST_NAME));
         assertTrue(readerRepository.findById(readerId).isPresent());
         Reader reader = readerRepository.findById(readerId).get();
         Borrowing b1 = new Borrowing();

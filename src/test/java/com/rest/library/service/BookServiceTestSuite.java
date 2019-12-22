@@ -1,9 +1,6 @@
 package com.rest.library.service;
 
-import com.rest.library.domain.Author;
-import com.rest.library.domain.Book;
-import com.rest.library.domain.BookDto;
-import com.rest.library.domain.Volume;
+import com.rest.library.domain.*;
 import com.rest.library.exceptions.AuthorNotFoundException;
 import com.rest.library.exceptions.BookCantBeDeletedException;
 import com.rest.library.exceptions.BookNotFoundException;
@@ -43,9 +40,10 @@ public class BookServiceTestSuite {
     public void testAddBook() throws AuthorNotFoundException {
         //Given
         Long authorId = authorRepository.save(new Author()).getId();
+        BookSimplyDto bookSimplyDto = new BookSimplyDto(TEST_TITLE, TEST_PUBLICATION_YEAR, authorId);
 
         //When
-        Long bookId = bookService.addBook(TEST_TITLE, TEST_PUBLICATION_YEAR, authorId);
+        Long bookId = bookService.addBook(bookSimplyDto);
 
         //Then
 
@@ -58,8 +56,9 @@ public class BookServiceTestSuite {
     @Test(expected = AuthorNotFoundException.class)
     public void testAddBookThrowsAuthorNotFoundException() throws AuthorNotFoundException {
         //Given
+        BookSimplyDto bookSimplyDto = new BookSimplyDto(TEST_TITLE, TEST_PUBLICATION_YEAR, -1L);
         //When
-        Long bookId = bookService.addBook(TEST_TITLE, TEST_PUBLICATION_YEAR, -1L);
+        bookService.addBook(bookSimplyDto);
 
         //Then
         //throw AuthorNotFoundException

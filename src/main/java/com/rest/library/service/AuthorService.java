@@ -2,6 +2,7 @@ package com.rest.library.service;
 
 import com.rest.library.domain.Author;
 import com.rest.library.domain.AuthorDto;
+import com.rest.library.domain.AuthorSimpleDto;
 import com.rest.library.exceptions.*;
 import com.rest.library.mapper.AuthorMapper;
 import com.rest.library.repository.AuthorRepository;
@@ -25,7 +26,9 @@ public class AuthorService {
     @Autowired
     private AuthorMapper authorMapper;
 
-    public Long addAuthor(String firstName, String lastName) {
+    public Long addAuthor(AuthorSimpleDto authorSimpleDto) {
+        String firstName = authorSimpleDto.getFirstName();
+        String lastName = authorSimpleDto.getLastName();
         Author author = authorRepository.save(new Author(firstName, lastName));
         LOGGER.info("Author successful added with id: " + author.getId());
         return author.getId();

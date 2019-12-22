@@ -1,6 +1,7 @@
 package com.rest.library.controller;
 
 import com.rest.library.domain.BookDto;
+import com.rest.library.domain.BookSimplyDto;
 import com.rest.library.exceptions.*;
 import com.rest.library.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class BookController {
     private BookService bookService;
 
     @RequestMapping(method = RequestMethod.POST, value = "addBook")
-    public void addBook(@RequestParam String title, @RequestParam int publicationYear, @RequestParam Long authorId) throws AuthorNotFoundException {
-        bookService.addBook(title, publicationYear, authorId);
+    public void addBook(@RequestBody BookSimplyDto bookSimplyDto) throws AuthorNotFoundException {
+        bookService.addBook(bookSimplyDto);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getBook")

@@ -1,6 +1,7 @@
 package com.rest.library.controller;
 
 import com.rest.library.domain.ReaderDto;
+import com.rest.library.domain.ReaderSimpleDto;
 import com.rest.library.exceptions.ReaderCantBeDeletedException;
 import com.rest.library.exceptions.ReaderNotFoundException;
 import com.rest.library.service.ReaderService;
@@ -17,8 +18,8 @@ public class ReaderController {
     private ReaderService readerService;
 
     @RequestMapping(method = RequestMethod.POST, value = "addReader")
-    public void addReader(@RequestParam String firstName, @RequestParam String lastName) {
-        readerService.addReader(firstName, lastName);
+    public void addReader(@RequestBody ReaderSimpleDto readerSimpleDto) {
+        readerService.addReader(readerSimpleDto);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getReader")

@@ -3,6 +3,7 @@ package com.rest.library.service;
 import com.rest.library.domain.Author;
 import com.rest.library.domain.Book;
 import com.rest.library.domain.BookDto;
+import com.rest.library.domain.BookSimplyDto;
 import com.rest.library.exceptions.*;
 import com.rest.library.mapper.BookMapper;
 import com.rest.library.repository.AuthorRepository;
@@ -32,7 +33,10 @@ public class BookService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    public Long addBook(String title, int publicationYear, Long authorId) throws AuthorNotFoundException {
+    public Long addBook(BookSimplyDto bookSimplyDto) throws AuthorNotFoundException {
+        Long authorId = bookSimplyDto.getAuthorId();
+        String title = bookSimplyDto.getTitle();
+        int publicationYear = bookSimplyDto.getPublicationYear();
         if (authorRepository.findById(authorId).isPresent()) {
             Author author = authorRepository.findById(authorId).get();
             Book book = bookRepository.save(new Book(title, publicationYear, author));

@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n\t\"firstName\": \"nejm\",\n\t\"lastName\": \"last nejm\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -30,7 +30,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/v1/author/addAuthor?firstName=nejm&lastName=last nejm",
+							"raw": "http://localhost:8080/v1/author/addAuthor",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -40,16 +40,6 @@
 								"v1",
 								"author",
 								"addAuthor"
-							],
-							"query": [
-								{
-									"key": "firstName",
-									"value": "nejm"
-								},
-								{
-									"key": "lastName",
-									"value": "last nejm"
-								}
 							]
 						}
 					},
@@ -155,8 +145,17 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"test title\",\n\t\"publicationYear\": 2000,\n\t\"authorId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/v1/book/addBook?title=test title&publicationYear=2000&authorId=1",
+							"raw": "http://localhost:8080/v1/book/addBook",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -166,20 +165,6 @@
 								"v1",
 								"book",
 								"addBook"
-							],
-							"query": [
-								{
-									"key": "title",
-									"value": "test title"
-								},
-								{
-									"key": "publicationYear",
-									"value": "2000"
-								},
-								{
-									"key": "authorId",
-									"value": "1"
-								}
 							]
 						}
 					},
@@ -278,8 +263,17 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"rider nejm\",\n\t\"lastName\": \"rider last nejm\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/v1/reader/addReader?firstName=rider nejm&lastName=rider last nejm",
+							"raw": "http://localhost:8080/v1/reader/addReader",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -289,16 +283,6 @@
 								"v1",
 								"reader",
 								"addReader"
-							],
-							"query": [
-								{
-									"key": "firstName",
-									"value": "rider nejm"
-								},
-								{
-									"key": "lastName",
-									"value": "rider last nejm"
-								}
 							]
 						}
 					},
@@ -404,8 +388,17 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"bookId\": 2,\n\t\"status\": \"toBorrow\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/v1/volume/addVolume?bookId=2&status=toBorrow",
+							"raw": "http://localhost:8080/v1/volume/addVolume",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -415,16 +408,6 @@
 								"v1",
 								"volume",
 								"addVolume"
-							],
-							"query": [
-								{
-									"key": "bookId",
-									"value": "2"
-								},
-								{
-									"key": "status",
-									"value": "toBorrow"
-								}
 							]
 						}
 					},
@@ -509,9 +492,25 @@
 					"name": "CHANGE VOLUME STATUS",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"volumeId\": 4,\n\t\"newStatus\": \"toBorrow\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/v1/volume/changeVolumeStatus?volumeId=4&newStatus=toBorrow",
+							"raw": "http://localhost:8080/v1/volume/changeVolumeStatus",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -521,16 +520,6 @@
 								"v1",
 								"volume",
 								"changeVolumeStatus"
-							],
-							"query": [
-								{
-									"key": "volumeId",
-									"value": "4"
-								},
-								{
-									"key": "newStatus",
-									"value": "toBorrow"
-								}
 							]
 						}
 					},
@@ -546,9 +535,25 @@
 					"name": "BORROW VOLUME",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"volumeId\": 4,\n\t\"readerId\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/v1/borrowing/borrowVolume?volumeId=4&readerId=3",
+							"raw": "http://localhost:8080/v1/borrowing/borrowVolume",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -558,16 +563,6 @@
 								"v1",
 								"borrowing",
 								"borrowVolume"
-							],
-							"query": [
-								{
-									"key": "volumeId",
-									"value": "4"
-								},
-								{
-									"key": "readerId",
-									"value": "3"
-								}
 							]
 						}
 					},
@@ -598,9 +593,25 @@
 					"name": "RETUN VOLUME",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"volumeId\" :4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/v1/borrowing/returnVolume?volumeId=4",
+							"raw": "http://localhost:8080/v1/borrowing/returnVolume",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -610,12 +621,6 @@
 								"v1",
 								"borrowing",
 								"returnVolume"
-							],
-							"query": [
-								{
-									"key": "volumeId",
-									"value": "4"
-								}
 							]
 						}
 					},

@@ -2,6 +2,7 @@ package com.rest.library.service;
 
 import com.rest.library.domain.Author;
 import com.rest.library.domain.AuthorDto;
+import com.rest.library.domain.AuthorSimpleDto;
 import com.rest.library.domain.Book;
 import com.rest.library.exceptions.AuthorCantBeDeletedException;
 import com.rest.library.exceptions.AuthorNotFoundException;
@@ -32,9 +33,9 @@ public class AuthorServiceTestSuite {
     @Test
     public void testAddAuthor() {
         //Given
-
+        AuthorSimpleDto authorSimpleDto = new AuthorSimpleDto(TEST_FIRST_NAME, TEST_LAST_NAME);
         //When
-        Long authorId = authorService.addAuthor(TEST_FIRST_NAME, TEST_LAST_NAME);
+        Long authorId = authorService.addAuthor(authorSimpleDto);
 
         //Then
         assertTrue(authorRepository.findById(authorId).isPresent());
@@ -46,7 +47,8 @@ public class AuthorServiceTestSuite {
     @Test
     public void testGetAuthor() throws AuthorNotFoundException {
         //Given
-        Long authorId = authorService.addAuthor(TEST_FIRST_NAME, TEST_LAST_NAME);
+        AuthorSimpleDto authorSimpleDto = new AuthorSimpleDto(TEST_FIRST_NAME, TEST_LAST_NAME);
+        Long authorId = authorService.addAuthor(authorSimpleDto);
         assertTrue(authorRepository.findById(authorId).isPresent());
         Author author = authorRepository.findById(authorId).get();
         Book book1 = new Book();
@@ -86,7 +88,8 @@ public class AuthorServiceTestSuite {
     @Test
     public void testDeleteAuthor() throws AuthorNotFoundException, AuthorCantBeDeletedException {
         //Given
-        Long authorId = authorService.addAuthor(TEST_FIRST_NAME, TEST_LAST_NAME);
+        AuthorSimpleDto authorSimpleDto = new AuthorSimpleDto(TEST_FIRST_NAME, TEST_LAST_NAME);
+        Long authorId = authorService.addAuthor(authorSimpleDto);
         assertTrue(authorRepository.findById(authorId).isPresent());
         //When
         authorService.deleteAuthor(authorId);
@@ -111,7 +114,8 @@ public class AuthorServiceTestSuite {
     @Test(expected = AuthorCantBeDeletedException.class)
     public void testDeleteAuthorThrowsAuthorCantBeDeletedException() throws AuthorNotFoundException, AuthorCantBeDeletedException {
         //Given
-        Long authorId = authorService.addAuthor(TEST_FIRST_NAME, TEST_LAST_NAME);
+        AuthorSimpleDto authorSimpleDto = new AuthorSimpleDto(TEST_FIRST_NAME, TEST_LAST_NAME);
+        Long authorId = authorService.addAuthor(authorSimpleDto);
         assertTrue(authorRepository.findById(authorId).isPresent());
         Author author = authorRepository.findById(authorId).get();
         Book book = new Book("TestBookTitle", 2000, author);

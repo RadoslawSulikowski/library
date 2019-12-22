@@ -1,9 +1,6 @@
 package com.rest.library.service;
 
-import com.rest.library.domain.Book;
-import com.rest.library.domain.Borrowing;
-import com.rest.library.domain.Volume;
-import com.rest.library.domain.VolumeDto;
+import com.rest.library.domain.*;
 import com.rest.library.exceptions.BookNotFoundException;
 import com.rest.library.exceptions.VolumeCantBeDeletedException;
 import com.rest.library.exceptions.VolumeNotFoundException;
@@ -46,7 +43,7 @@ public class VolumeServiceTestSuite {
         Long bookId = book.getId();
 
         //When
-        Long volumeId = volumeService.addVolume(bookId, TEST_VOLUME_STATUS);
+        Long volumeId = volumeService.addVolume(new VolumeCreationDto(bookId, TEST_VOLUME_STATUS));
 
         //Then
         assertTrue(volumeRepository.findById(volumeId).isPresent());
@@ -60,7 +57,7 @@ public class VolumeServiceTestSuite {
         //Given
 
         //When
-        volumeService.addVolume(-1L, TEST_VOLUME_STATUS);
+        volumeService.addVolume(new VolumeCreationDto(-1L, TEST_VOLUME_STATUS));
 
         //Then
         //throw BookNotFoundException
@@ -74,11 +71,11 @@ public class VolumeServiceTestSuite {
         Book book = bookRepository.save(new Book());
         Long bookId = book.getId();
         assertTrue(bookRepository.findById(bookId).isPresent());
-        Long volume1Id = volumeService.addVolume(bookId, "toBorrow");
+        Long volume1Id = volumeService.addVolume(new VolumeCreationDto(bookId, "toBorrow"));
         assertTrue(volumeRepository.findById(volume1Id).isPresent());
-        Long volume2Id = volumeService.addVolume(bookId, "toBorrow");
+        Long volume2Id = volumeService.addVolume(new VolumeCreationDto(bookId, "toBorrow"));
         assertTrue(volumeRepository.findById(volume2Id).isPresent());
-        Long volume3Id = volumeService.addVolume(bookId, "borrowed");
+        Long volume3Id = volumeService.addVolume(new VolumeCreationDto(bookId, "borrowed"));
         assertTrue(volumeRepository.findById(volume3Id).isPresent());
         assertEquals(3, bookRepository.findById(bookId).get().getVolumes().size());
 
@@ -116,7 +113,7 @@ public class VolumeServiceTestSuite {
         assertTrue(volumeRepository.findById(volumeId).isPresent());
 
         //When
-        volumeService.changeVolumeStatus(volumeId, "Changed volume status");
+        volumeService.changeVolumeStatus(new VolumeModificationDto(volumeId, "Changed volume status"));
 
         //Then
         assertEquals("Changed volume status", volumeRepository.findById(volumeId).get().getStatus());
@@ -131,7 +128,7 @@ public class VolumeServiceTestSuite {
         //Given
 
         //When
-        volumeService.changeVolumeStatus(-1L, "");
+        volumeService.changeVolumeStatus(new VolumeModificationDto(-1L, ""));
 
         //Then
         //throw VolumeNotFoundException
@@ -154,7 +151,7 @@ public class VolumeServiceTestSuite {
 
         //When
         try {
-            volumeService.changeVolumeStatus(volumeId, "Changed volume status");
+            volumeService.changeVolumeStatus(new VolumeModificationDto(volumeId, "Changed volume status"));
 
             //Then
             //throw VolumeStatusCantBeChangedException
@@ -170,7 +167,7 @@ public class VolumeServiceTestSuite {
         //Given
         Book book = bookRepository.save(new Book());
         Long bookId = book.getId();
-        Long volumeId = volumeService.addVolume(bookId, TEST_VOLUME_STATUS);
+        Long volumeId = volumeService.addVolume(new VolumeCreationDto(bookId, TEST_VOLUME_STATUS));
         assertTrue(volumeRepository.findById(volumeId).isPresent());
         int volumeBorrowingsSize = volumeRepository.findById(volumeId).get().getBorrowings().size();
 
@@ -210,7 +207,7 @@ public class VolumeServiceTestSuite {
         Book book = bookRepository.save(new Book());
         Long bookId = book.getId();
         assertTrue(bookRepository.findById(bookId).isPresent());
-        Long volumeId = volumeService.addVolume(bookId, TEST_VOLUME_STATUS);
+        Long volumeId = volumeService.addVolume(new VolumeCreationDto(bookId, TEST_VOLUME_STATUS));
         assertTrue(volumeRepository.findById(volumeId).isPresent());
         assertFalse(bookRepository.findById(bookId).get().getVolumes().isEmpty());
 
@@ -243,7 +240,7 @@ public class VolumeServiceTestSuite {
         //Given
         Book book = bookRepository.save(new Book());
         Long bookId = book.getId();
-        Long volumeId = volumeService.addVolume(bookId, TEST_VOLUME_STATUS);
+        Long volumeId = volumeService.addVolume(new VolumeCreationDto(bookId, TEST_VOLUME_STATUS));
         assertTrue(volumeRepository.findById(volumeId).isPresent());
         Volume volume = volumeRepository.findById(volumeId).get();
         Borrowing borrowing = new Borrowing();

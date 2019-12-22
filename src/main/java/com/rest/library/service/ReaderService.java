@@ -2,6 +2,7 @@ package com.rest.library.service;
 
 import com.rest.library.domain.Reader;
 import com.rest.library.domain.ReaderDto;
+import com.rest.library.domain.ReaderSimpleDto;
 import com.rest.library.exceptions.ReaderCantBeDeletedException;
 import com.rest.library.exceptions.ReaderNotFoundException;
 import com.rest.library.mapper.ReaderMapper;
@@ -26,7 +27,9 @@ public class ReaderService {
     @Autowired
     private ReaderMapper readerMapper;
 
-    public Long addReader(String firstName, String lastName) {
+    public Long addReader(ReaderSimpleDto readerSimpleDto) {
+        String firstName = readerSimpleDto.getFirstName();
+        String lastName = readerSimpleDto.getLastName();
         Reader reader = readerRepository.save(new Reader(firstName, lastName));
         LOGGER.info("Reader successful added with id: " + reader.getId());
         return reader.getId();

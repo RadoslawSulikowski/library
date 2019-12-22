@@ -33,7 +33,9 @@ public class VolumeService {
     @Autowired
     private BookRepository bookRepository;
 
-    public Long addVolume(Long bookId, String status) throws BookNotFoundException {
+    public Long addVolume(VolumeCreationDto volumeCreationDto) throws BookNotFoundException {
+        Long bookId = volumeCreationDto.getBookId();
+        String status = volumeCreationDto.getStatus();
         if (bookRepository.findById(bookId).isPresent()) {
             Book book = bookRepository.findById(bookId).get();
             Volume volume = volumeRepository.save(new Volume(book, status));
@@ -55,7 +57,10 @@ public class VolumeService {
         }
     }
 
-    public VolumeDto changeVolumeStatus(Long volumeId, String newStatus) throws VolumeNotFoundException, VolumeStatusCantBeChangedException {
+    public VolumeDto changeVolumeStatus(VolumeModificationDto volumeModificationDto)
+            throws VolumeNotFoundException, VolumeStatusCantBeChangedException {
+        Long volumeId = volumeModificationDto.getVolumeId();
+        String newStatus = volumeModificationDto.getNewStatus();
         if (volumeRepository.findById(volumeId).isPresent()) {
             Volume volume = volumeRepository.findById(volumeId).get();
             if (volume.hasBorrowingWithoutReturningDate()) {

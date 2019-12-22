@@ -1,6 +1,7 @@
 package com.rest.library.controller;
 
 import com.rest.library.domain.AuthorDto;
+import com.rest.library.domain.AuthorSimpleDto;
 import com.rest.library.exceptions.*;
 import com.rest.library.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class AuthorController {
     private AuthorService authorService;
 
     @RequestMapping(method = RequestMethod.POST, value = "addAuthor")
-    public void addAuthor(@RequestParam String firstName, @RequestParam String lastName) {
-        authorService.addAuthor(firstName, lastName);
+    public void addAuthor(@RequestBody AuthorSimpleDto authorSimpleDto) {
+        authorService.addAuthor(authorSimpleDto);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getAuthor")

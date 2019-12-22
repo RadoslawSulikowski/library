@@ -1,9 +1,6 @@
 package com.rest.library.service;
 
-import com.rest.library.domain.Book;
-import com.rest.library.domain.Borrowing;
-import com.rest.library.domain.Reader;
-import com.rest.library.domain.Volume;
+import com.rest.library.domain.*;
 import com.rest.library.exceptions.*;
 import com.rest.library.repository.BorrowingRepository;
 import com.rest.library.repository.ReaderRepository;
@@ -47,7 +44,7 @@ public class BorrowingServiceTestSuite {
         Long readerId = reader.getId();
 
         //When
-        Long borrowingId = borrowingService.borrowVolume(volumeId, readerId);
+        Long borrowingId = borrowingService.borrowVolume(new BorrowingBorrowDto(volumeId, readerId));
 
         //Then
         assertTrue(borrowingRepository.findById(borrowingId).isPresent());
@@ -70,7 +67,7 @@ public class BorrowingServiceTestSuite {
 
         //When
         try {
-            borrowingService.borrowVolume(-1L, readerId);
+            borrowingService.borrowVolume(new BorrowingBorrowDto(-1L, readerId));
 
             //Then
             //throw VolumeNotFoundException
@@ -89,7 +86,7 @@ public class BorrowingServiceTestSuite {
 
         //When
         try {
-            borrowingService.borrowVolume(volumeId, -1L);
+            borrowingService.borrowVolume(new BorrowingBorrowDto(volumeId, -1L));
 
             //Then
             //throw ReaderNotFoundException
@@ -112,7 +109,7 @@ public class BorrowingServiceTestSuite {
 
         //When
         try {
-            borrowingService.borrowVolume(volumeId, readerId);
+            borrowingService.borrowVolume(new BorrowingBorrowDto(volumeId, readerId));
 
             //Then
             //throw VolumeCantBeBorrowedException
@@ -132,12 +129,12 @@ public class BorrowingServiceTestSuite {
         Long volumeId = volume.getId();
         Reader reader = readerRepository.save(new Reader());
         Long readerId = reader.getId();
-        Long borrowingId = borrowingService.borrowVolume(volumeId, readerId);
+        Long borrowingId = borrowingService.borrowVolume(new BorrowingBorrowDto(volumeId, readerId));
         assertTrue(borrowingRepository.findById(borrowingId).isPresent());
         Borrowing borrowing = borrowingRepository.findById(borrowingId).get();
 
         //When
-        borrowingService.returnVolume(volumeId);
+        borrowingService.returnVolume(new BorrowingReturnDto(volumeId));
         LocalDateTime returningDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         //Then
         assertEquals("returned", volume.getStatus());
@@ -155,7 +152,7 @@ public class BorrowingServiceTestSuite {
         //Given
 
         //When
-        borrowingService.returnVolume(-1L);
+        borrowingService.returnVolume(new BorrowingReturnDto(-1L));
     }
 
     @Test(expected = BorrowingNotFoundException.class)
@@ -167,7 +164,7 @@ public class BorrowingServiceTestSuite {
 
         //When
         try {
-            borrowingService.returnVolume(volumeId);
+            borrowingService.returnVolume(new BorrowingReturnDto(volumeId));
             //Then
             //throw BorrowingNotFoundException
         } finally {
@@ -185,14 +182,14 @@ public class BorrowingServiceTestSuite {
         Long volumeId = volume.getId();
         Reader reader = readerRepository.save(new Reader());
         Long readerId = reader.getId();
-        Long borrowingId = borrowingService.borrowVolume(volumeId, readerId);
+        Long borrowingId = borrowingService.borrowVolume(new BorrowingBorrowDto(volumeId, readerId));
         assertTrue(borrowingRepository.findById(borrowingId).isPresent());
         Borrowing borrowing = borrowingRepository.findById(borrowingId).get();
         borrowing.setReturningDate(LocalDateTime.now());
 
         //When
         try {
-            borrowingService.returnVolume(volumeId);
+            borrowingService.returnVolume(new BorrowingReturnDto(volumeId));
             //Then
             //throw VolumeAlreadyReturnedException
         } finally {
